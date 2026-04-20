@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --green-900: #1a3828;
+  --green-800: #22472f;
+  --green-700: #2a5a3a;
+  --green-600: #2d6b42;
+  --green-500: #3a8a55;
+  --amber: #e8a838;
+  --amber-dark: #c98a1a;
+  --amber-light: #fef3d8;
+  --off-white: #faf9f6;
+  --dark: #1c2b20;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--off-white);
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-serif { font-family: 'Fraunces', Georgia, serif; }

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Handy Owl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-900:#1a3828; --green-800:#22472f; --green-700:#2a5a3a;
+      --green-600:#2d6b42; --green-500:#3a8a55;
+      --green-100:#e8f4ec; --green-50:#f2f9f4;
+      --amber:#e8a838; --amber-dark:#c98a1a; --amber-light:#fef3d8;
+      --off-white:#faf9f6; --gray-700:#374151; --gray-500:#6b7280;
+      --gray-300:#d1d5db; --gray-100:#f3f4f6; --dark:#1c2b20;
+      --radius:12px;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:0 4px 16px rgba(0,0,0,.10);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--gray-100); color:var(--dark); line-height:1.6; -webkit-font-smoothing:antialiased; display:flex; min-height:100vh; }
+    a { color:inherit; text-decoration:none; }
+
+    /* SIDEBAR NAV */
+    .sidenav {
+      width: 240px; flex-shrink: 0;
+      background: var(--green-900);
+      min-height: 100vh;
+      position: sticky; top: 0; height: 100vh;
+      display: flex; flex-direction: column;
+      padding: 0 0 24px;
+      overflow-y: auto;
+    }
+    .sidenav-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 20px 0;
+      font-size: 1.1rem; font-weight: 700; color: #fff;
+      margin-bottom: 28px;
+    }
+    .sidenav-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .sidenav-section { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); padding: 0 20px; margin: 16px 0 6px; }
+    .sidenav-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      font-size: .88rem; font-weight: 500;
+      color: rgba(255,255,255,.65);
+      transition: background .15s, color .15s;
+      border-radius: 0;
+    }
+    .sidenav-link:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .sidenav-link.active { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+    .sidenav-link .icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
+    .sidenav-bottom { margin-top: auto; padding: 16px 20px 0; border-top: 1px solid rgba(255,255,255,.08); }
+    .upgrade-btn {
+      display: block; width: 100%;
+      background: var(--amber); color: var(--dark);
+      text-align: center; padding: 10px;
+      border-radius: 8px; font-size: .85rem; font-weight: 700;
+      margin-bottom: 12px;
+      transition: background .15s;
+    }
+    .upgrade-btn:hover { background: var(--amber-dark); color: #fff; }
+    .user-pill {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .8rem; color: rgba(255,255,255,.65);
+    }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--green-600);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+
+    /* MAIN */
+    .main { flex: 1; min-width: 0; padding: 32px; }
+
+    /* TOP BAR */
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
+    .topbar h1 { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 800; }
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid var(--gray-300);
+      border-radius: 10px; padding: 9px 14px;
+      font-size: .9rem; color: var(--gray-500);
+      min-width: 260px;
+    }
+    .search-bar input { border: none; outline: none; font-family: 'Inter', sans-serif; font-size: .9rem; width: 100%; background: transparent; }
+
+    /* STATS ROW */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    @media(max-width:900px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    .stat-card { background: #fff; border: 1px solid var(--gray-300); border-radius: var(--radius); padding: 20px; }
+    .stat-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-500); margin-bottom: 8px; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
+    .stat-sub { font-size: .78rem; color: var(--gray-500); }
+    .stat-card.highlight { background: var(--green-700); border-color: var(--green-700); }
+    .stat-card.highlight .stat-label { color: rgba(255,255,255,.65); }
+    .stat-card.highlight .stat-value { color: #fff; }
+    .stat-card.highlight .stat-sub { color: rgba(255,255,255,.6); }
+
+    /* SECTIONS */
+    .section { margin-bottom: 36px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-title { font-size: 1rem; font-weight: 700; color: var(--dark); }
+    .section-link { font-size: .82rem; color: var(--green-600); font-weight: 600; }
+    .section-link:hover { text-decoration: underline; }
+
+    /* GUIDE CARDS */
+    .guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .guide-card {
+      background: #fff; border: 1px solid var(--gray-300);
+      border-radius: var(--radius); overflow: hidden;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+      cursor: pointer;
+    }
+    .guide-card:hover { border-color: var(--green-500); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .guide-card-thumb {
+      height: 120px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.8rem;
+    }
+    .guide-card-body { padding: 14px 16px 16px; }
+    .guide-card-cat { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--green-600); margin-bottom: 4px; }
+    .guide-card-title { font-size: .92rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; line-height: 1.35; }
+    .guide-card-meta { display: flex; gap: 10px; font-size: .75rem; color: var(--gray-500); }
+    .guide-card .premium-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--amber-light); color: var(--amber-dark);
+      font-size: .68rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 100px;
+      margin-bottom: 6px;
+    }
+
+    /* CONTINUE CARD */
+    .continue-card {
+      background: #fff; border: 1px solid var(--gray-300);
+      border-radius: var(--radius); padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 12px;
+      transition: box-shadow .15s; cursor: pointer;
+    }
+    .continue-card:hover { box-shadow: var(--shadow-md); }
+    .continue-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .continue-info { flex: 1; min-width: 0; }
+    .continue-title { font-size: .92rem; font-weight: 700; margin-bottom: 4px; }
+    .continue-progress { font-size: .78rem; color: var(--gray-500); margin-bottom: 6px; }
+    .mini-progress { background: var(--gray-100); border-radius: 100px; height: 5px; }
+    .mini-progress-fill { height: 100%; border-radius: 100px; background: var(--green-600); }
+    .continue-cta { font-size: .82rem; font-weight: 600; color: var(--green-700); flex-shrink: 0; }
+
+    /* CATEGORY PILLS */
+    .cat-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .cat-pill {
+      padding: 6px 14px; border-radius: 100px;
+      font-size: .82rem; font-weight: 600;
+      border: 1px solid var(--gray-300);
+      background: #fff; color: var(--gray-700);
+      cursor: pointer; transition: all .15s;
+    }
+    .cat-pill.active, .cat-pill:hover { background: var(--green-700); color: #fff; border-color: var(--green-700); }
+
+    @media(max-width:768px) {
+      .sidenav { display: none; }
+      .main { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR NAV -->
+<nav class="sidenav">
+  <div class="sidenav-logo">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="18" cy="18" r="18" fill="#2d6b42"/>
+      <ellipse cx="18" cy="21" rx="9" ry="10" fill="#e8a838"/>
+      <ellipse cx="18" cy="13" rx="8" ry="7" fill="#e8a838"/>
+      <polygon points="12,8 14,4 16,8" fill="#2d6b42"/>
+      <polygon points="20,8 22,4 24,8" fill="#2d6b42"/>
+      <circle cx="14.5" cy="13" r="3.5" fill="#fff"/><circle cx="14.5" cy="13" r="2" fill="#1c2b20"/>
+      <circle cx="21.5" cy="13" r="3.5" fill="#fff"/><circle cx="21.5" cy="13" r="2" fill="#1c2b20"/>
+      <polygon points="17,15 19,15 18,17" fill="#c98a1a"/>
+    </svg>
+    Handy Owl
+  </div>
+
+  <div class="sidenav-section">Main</div>
+  <a href="dashboard.html" class="sidenav-link active"><span class="icon">🏠</span> Dashboard</a>
+  <a href="#" class="sidenav-link"><span class="icon">📚</span> All Guides</a>
+  <a href="#" class="sidenav-link"><span class="icon">🔖</span> Saved</a>
+  <a href="#" class="sidenav-link"><span class="icon">✅</span> Completed</a>
+
+  <div class="sidenav-section">Categories</div>
+  <a href="#" class="sidenav-link"><span class="icon">🚿</span> Plumbing</a>
+  <a href="#" class="sidenav-link"><span class="icon">❄️</span> HVAC</a>
+  <a href="#" class="sidenav-link"><span class="icon">🔌</span> Electrical</a>
+  <a href="#" class="sidenav-link"><span class="icon">🪵</span> Flooring</a>
+  <a href="#" class="sidenav-link"><span class="icon">🚪</span> Doors & Windows</a>
+  <a href="#" class="sidenav-link"><span class="icon">🍳</span> Kitchen</a>
+  <a href="#" class="sidenav-link"><span class="icon">🌿</span> Outdoor</a>
+
+  <div class="sidenav-section">Account</div>
+  <a href="#" class="sidenav-link"><span class="icon">⚙️</span> Settings</a>
+  <a href="#" class="sidenav-link"><span class="icon">❓</span> Help</a>
+
+  <div class="sidenav-bottom">
+    <a href="index.html#pricing" class="upgrade-btn">⬆ Upgrade to Premium</a>
+    <div class="user-pill">
+      <div class="user-avatar">A</div>
+      <span>Andrew · Free plan</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="topbar">
+    <h1>Good morning, Andrew 🦉</h1>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" placeholder="Search 200+ guides…" />
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card highlight">
+      <div class="stat-label">Saved this year</div>
+      <div class="stat-value">$0</div>
+      <div class="stat-sub">Complete your first project</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Projects completed</div>
+      <div class="stat-value">0</div>
+      <div class="stat-sub">Start one today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Guides saved</div>
+      <div class="stat-value">0</div>
+      <div class="stat-sub">Bookmark guides to build your list</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">This week's new guides</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">Added Sunday</div>
+    </div>
+  </div>
+
+  <!-- CONTINUE WHERE YOU LEFT OFF -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Continue where you left off</div>
+    </div>
+    <a href="guide.html" class="continue-card">
+      <div class="continue-icon">🚿</div>
+      <div class="continue-info">
+        <div class="continue-title">How to Fix a Leaky Faucet</div>
+        <div class="continue-progress">2 of 6 steps completed</div>
+        <div class="mini-progress"><div class="mini-progress-fill" style="width:33%"></div></div>
+      </div>
+      <div class="continue-cta">Continue →</div>
+    </a>
+  </div>
+
+  <!-- NEW THIS WEEK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">New this week</div>
+      <a href="#" class="section-link">See all →</a>
+    </div>
+    <div class="guide-grid">
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#e8f4ec;">🚿</div>
+        <div class="guide-card-body">
+          <div class="guide-card-cat">Plumbing</div>
+          <div class="guide-card-title">Replace a Toilet Flapper in 15 Minutes</div>
+          <div class="guide-card-meta"><span>⏱ 15 min</span><span>💰 $5–$10</span><span>🟢 Easy</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#fef3d8;">❄️</div>
+        <div class="guide-card-body">
+          <div class="premium-badge">⭐ Premium</div>
+          <div class="guide-card-cat">HVAC</div>
+          <div class="guide-card-title">Change Your Furnace Filter (and Why It Matters)</div>
+          <div class="guide-card-meta"><span>⏱ 10 min</span><span>💰 $8–$25</span><span>🟢 Easy</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#f2f9f4;">🪵</div>
+        <div class="guide-card-body">
+          <div class="premium-badge">⭐ Premium</div>
+          <div class="guide-card-cat">Flooring</div>
+          <div class="guide-card-title">Fix a Squeaky Hardwood Floor</div>
+          <div class="guide-card-meta"><span>⏱ 30 min</span><span>💰 $0–$15</span><span>🟢 Easy</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#fef2f2;">🔌</div>
+        <div class="guide-card-body">
+          <div class="premium-badge">⭐ Premium</div>
+          <div class="guide-card-cat">Electrical</div>
+          <div class="guide-card-title">Replace a Light Switch Safely</div>
+          <div class="guide-card-meta"><span>⏱ 20 min</span><span>💰 $3–$12</span><span>🟡 Intermediate</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BROWSE BY CATEGORY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Browse by category</div>
+    </div>
+    <div class="cat-pills">
+      <div class="cat-pill active">All</div>
+      <div class="cat-pill">🚿 Plumbing</div>
+      <div class="cat-pill">❄️ HVAC</div>
+      <div class="cat-pill">🔌 Electrical</div>
+      <div class="cat-pill">🪵 Flooring</div>
+      <div class="cat-pill">🚪 Doors</div>
+      <div class="cat-pill">🍳 Kitchen</div>
+      <div class="cat-pill">🌿 Outdoor</div>
+      <div class="cat-pill">🛁 Bathroom</div>
+    </div>
+    <div class="guide-grid">
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#e8f4ec;">🚿</div>
+        <div class="guide-card-body">
+          <div class="guide-card-cat">Plumbing</div>
+          <div class="guide-card-title">How to Fix a Leaky Faucet</div>
+          <div class="guide-card-meta"><span>⏱ 45 min</span><span>💰 $8–$25</span><span>🟢 Easy</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#e8f4ec;">🌊</div>
+        <div class="guide-card-body">
+          <div class="guide-card-cat">Plumbing</div>
+          <div class="guide-card-title">Unclog a Slow Drain Without Chemicals</div>
+          <div class="guide-card-meta"><span>⏱ 20 min</span><span>💰 $0–$12</span><span>🟢 Easy</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#fef3d8;">❄️</div>
+        <div class="guide-card-body">
+          <div class="premium-badge">⭐ Premium</div>
+          <div class="guide-card-cat">HVAC</div>
+          <div class="guide-card-title">Clean Your AC Unit Before Summer</div>
+          <div class="guide-card-meta"><span>⏱ 60 min</span><span>💰 $0–$30</span><span>🟡 Intermediate</span></div>
+        </div>
+      </a>
+      <a href="guide.html" class="guide-card">
+        <div class="guide-card-thumb" style="background:#f5f0ff;">🪵</div>
+        <div class="guide-card-body">
+          <div class="premium-badge">⭐ Premium</div>
+          <div class="guide-card-cat">Flooring</div>
+          <div class="guide-card-title">Install Laminate Flooring Start to Finish</div>
+          <div class="guide-card-meta"><span>⏱ Full day</span><span>💰 $200–$600</span><span>🟡 Intermediate</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>

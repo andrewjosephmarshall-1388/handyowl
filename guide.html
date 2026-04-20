@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Fix a Leaky Faucet — Handy Owl</title>
+  <meta name="description" content="Step-by-step guide to fixing a leaky faucet. Save $150-$300 vs. a plumber. Includes video, checklist, and materials list." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-900:#1a3828; --green-800:#22472f; --green-700:#2a5a3a;
+      --green-600:#2d6b42; --green-500:#3a8a55;
+      --green-100:#e8f4ec; --green-50:#f2f9f4;
+      --amber:#e8a838; --amber-dark:#c98a1a; --amber-light:#fef3d8;
+      --off-white:#faf9f6; --gray-700:#374151; --gray-500:#6b7280;
+      --gray-300:#d1d5db; --gray-100:#f3f4f6; --dark:#1c2b20;
+      --radius:12px;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:0 4px 16px rgba(0,0,0,.10);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--off-white); color:var(--dark); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+
+    /* NAV */
+    nav { position:sticky; top:0; z-index:100; background:rgba(250,249,246,.92); backdrop-filter:blur(12px); border-bottom:1px solid rgba(0,0,0,.06); }
+    .nav-inner { max-width:1200px; margin:0 auto; padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+    .logo { display:flex; align-items:center; gap:10px; font-size:1.1rem; font-weight:700; color:var(--green-800); }
+    .logo svg { width:32px; height:32px; flex-shrink:0; }
+    .nav-right { display:flex; align-items:center; gap:16px; }
+    .nav-back { font-size:.88rem; color:var(--gray-500); display:flex; align-items:center; gap:6px; transition:color .15s; }
+    .nav-back:hover { color:var(--green-700); }
+    .btn-upgrade { background:var(--green-700); color:#fff; padding:7px 16px; border-radius:8px; font-size:.85rem; font-weight:600; }
+
+    /* LAYOUT */
+    .page { max-width:1200px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:1fr 340px; gap:40px; align-items:start; }
+    @media(max-width:900px) { .page { grid-template-columns:1fr; } .sidebar { order:-1; } }
+
+    /* BREADCRUMB */
+    .breadcrumb { display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--gray-500); margin-bottom:20px; flex-wrap:wrap; }
+    .breadcrumb a:hover { color:var(--green-600); }
+    .breadcrumb span { color:var(--gray-300); }
+
+    /* GUIDE HEADER */
+    .guide-header { margin-bottom:28px; }
+    .guide-category { display:inline-flex; align-items:center; gap:6px; background:var(--green-100); color:var(--green-700); font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:4px 12px; border-radius:100px; margin-bottom:14px; }
+    .guide-title { font-family:'Fraunces',serif; font-size:clamp(1.7rem,4vw,2.4rem); font-weight:800; line-height:1.15; letter-spacing:-.02em; margin-bottom:16px; }
+    .guide-meta { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:20px; }
+    .meta-item { display:flex; align-items:center; gap:7px; font-size:.88rem; color:var(--gray-500); }
+    .meta-icon { font-size:1rem; }
+    .guide-desc { font-size:1rem; color:var(--gray-700); line-height:1.75; border-left:3px solid var(--green-500); padding-left:16px; margin-bottom:28px; }
+
+    /* VIDEO */
+    .video-wrap { position:relative; padding-bottom:56.25%; background:#1a1a2e; border-radius:var(--radius); overflow:hidden; margin-bottom:8px; }
+    .video-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+    .video-credit { font-size:.78rem; color:var(--gray-500); text-align:right; margin-bottom:28px; }
+    .video-credit a { color:var(--green-600); font-weight:600; }
+    .video-credit a:hover { text-decoration:underline; }
+
+    /* TABS */
+    .tabs { display:flex; gap:0; border-bottom:2px solid var(--gray-300); margin-bottom:28px; }
+    .tab { padding:10px 20px; font-size:.9rem; font-weight:600; color:var(--gray-500); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color .15s, border-color .15s; }
+    .tab.active { color:var(--green-700); border-bottom-color:var(--green-700); }
+
+    /* STEPS */
+    .steps-list { display:flex; flex-direction:column; gap:0; }
+    .step-item { display:flex; gap:20px; padding:24px 0; border-bottom:1px solid var(--gray-100); }
+    .step-item:last-child { border-bottom:none; }
+    .step-left { display:flex; flex-direction:column; align-items:center; gap:0; flex-shrink:0; }
+    .step-num { width:36px; height:36px; background:var(--green-700); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:800; font-family:'Fraunces',serif; flex-shrink:0; }
+    .step-check { width:36px; height:36px; border:2px solid var(--gray-300); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s; flex-shrink:0; }
+    .step-check:hover { border-color:var(--green-500); background:var(--green-50); }
+    .step-check.checked { background:var(--green-600); border-color:var(--green-600); color:#fff; }
+    .step-line { width:2px; background:var(--gray-100); flex:1; margin:4px 0; }
+    .step-body { flex:1; }
+    .step-title { font-size:1rem; font-weight:700; margin-bottom:8px; color:var(--dark); }
+    .step-text { font-size:.92rem; color:var(--gray-700); line-height:1.7; }
+    .step-tip { background:var(--amber-light); border-left:3px solid var(--amber); border-radius:0 8px 8px 0; padding:10px 14px; margin-top:12px; font-size:.85rem; color:#7a5200; }
+    .step-tip strong { font-weight:700; }
+    .step-warning { background:#fef2f2; border-left:3px solid #ef4444; border-radius:0 8px 8px 0; padding:10px 14px; margin-top:12px; font-size:.85rem; color:#7f1d1d; }
+
+    /* SIDEBAR */
+    .sidebar { display:flex; flex-direction:column; gap:20px; position:sticky; top:84px; }
+
+    /* PROGRESS */
+    .progress-card { background:#fff; border:1px solid var(--gray-300); border-radius:var(--radius); padding:20px; }
+    .progress-title { font-size:.85rem; font-weight:700; color:var(--dark); margin-bottom:12px; }
+    .progress-bar-wrap { background:var(--gray-100); border-radius:100px; height:8px; margin-bottom:8px; overflow:hidden; }
+    .progress-bar { background:var(--green-600); height:100%; border-radius:100px; width:0%; transition:width .4s ease; }
+    .progress-label { font-size:.78rem; color:var(--gray-500); }
+
+    /* SAVINGS */
+    .savings-card { background:linear-gradient(135deg, var(--green-800), var(--green-900)); color:#fff; border-radius:var(--radius); padding:20px; }
+    .savings-label { font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:12px; }
+    .savings-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:.88rem; }
+    .savings-row .label { color:rgba(255,255,255,.75); }
+    .savings-row .val { font-weight:600; }
+    .savings-divider { border:none; border-top:1px solid rgba(255,255,255,.15); margin:12px 0; }
+    .savings-total-row { display:flex; justify-content:space-between; align-items:center; }
+    .savings-total-label { font-size:.88rem; font-weight:700; }
+    .savings-total-val { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:800; color:var(--amber); }
+
+    /* MATERIALS */
+    .materials-card { background:#fff; border:1px solid var(--gray-300); border-radius:var(--radius); padding:20px; }
+    .card-title { font-size:.85rem; font-weight:700; color:var(--dark); margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; }
+    .card-action { font-size:.75rem; color:var(--green-600); font-weight:600; cursor:pointer; }
+    .material-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:.88rem; }
+    .material-item:last-child { border-bottom:none; }
+    .material-icon { font-size:1rem; flex-shrink:0; }
+    .material-name { flex:1; color:var(--gray-700); }
+    .material-link { font-size:.75rem; color:var(--green-600); font-weight:600; }
+    .material-link:hover { text-decoration:underline; }
+
+    /* CREATOR */
+    .creator-card { background:#fff; border:1px solid var(--gray-300); border-radius:var(--radius); padding:20px; }
+    .creator-avatar { width:52px; height:52px; border-radius:50%; background:var(--green-100); display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; }
+    .creator-info h4 { font-size:.95rem; font-weight:700; }
+    .creator-info p { font-size:.8rem; color:var(--gray-500); margin-top:2px; }
+    .creator-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .creator-desc { font-size:.85rem; color:var(--gray-700); line-height:1.65; margin-bottom:14px; }
+    .btn-creator { display:block; text-align:center; padding:9px; border-radius:8px; font-size:.85rem; font-weight:600; border:1px solid var(--green-600); color:var(--green-700); transition:background .15s, color .15s; }
+    .btn-creator:hover { background:var(--green-700); color:#fff; }
+
+    /* RELATED */
+    .related { margin-top:48px; }
+    .related h2 { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:800; margin-bottom:20px; }
+    .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+    .related-card { background:#fff; border:1px solid var(--gray-300); border-radius:var(--radius); padding:16px; transition:border-color .15s,box-shadow .15s,transform .15s; cursor:pointer; }
+    .related-card:hover { border-color:var(--green-500); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .related-cat { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--green-600); margin-bottom:6px; }
+    .related-title { font-size:.9rem; font-weight:700; color:var(--dark); margin-bottom:8px; line-height:1.35; }
+    .related-meta { display:flex; gap:12px; font-size:.75rem; color:var(--gray-500); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="18" cy="18" r="18" fill="#2d6b42"/>
+        <ellipse cx="18" cy="21" rx="9" ry="10" fill="#e8a838"/>
+        <ellipse cx="18" cy="13" rx="8" ry="7" fill="#e8a838"/>
+        <polygon points="12,8 14,4 16,8" fill="#2d6b42"/>
+        <polygon points="20,8 22,4 24,8" fill="#2d6b42"/>
+        <circle cx="14.5" cy="13" r="3.5" fill="#fff"/><circle cx="14.5" cy="13" r="2" fill="#1c2b20"/>
+        <circle cx="15.2" cy="12.3" r=".6" fill="#fff"/>
+        <circle cx="21.5" cy="13" r="3.5" fill="#fff"/><circle cx="21.5" cy="13" r="2" fill="#1c2b20"/>
+        <circle cx="22.2" cy="12.3" r=".6" fill="#fff"/>
+        <polygon points="17,15 19,15 18,17" fill="#c98a1a"/>
+      </svg>
+      Handy Owl
+    </a>
+    <div class="nav-right">
+      <a href="dashboard.html" class="nav-back">← Back to guides</a>
+      <a href="index.html#pricing" class="btn-upgrade">Upgrade to Premium</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="breadcrumb">
+      <a href="dashboard.html">Home</a>
+      <span>/</span>
+      <a href="#">Plumbing</a>
+      <span>/</span>
+      <span style="color:var(--dark);">Fix a Leaky Faucet</span>
+    </div>
+
+    <div class="guide-header">
+      <div class="guide-category">🚿 Plumbing</div>
+      <h1 class="guide-title">How to Fix a Leaky Faucet</h1>
+      <div class="guide-meta">
+        <span class="meta-item"><span class="meta-icon">⏱️</span> 30–60 minutes</span>
+        <span class="meta-item"><span class="meta-icon">💰</span> $8–$25 in parts</span>
+        <span class="meta-item"><span class="meta-icon">🟢</span> Beginner friendly</span>
+        <span class="meta-item"><span class="meta-icon">⭐</span> 4.9 (182 ratings)</span>
+      </div>
+      <p class="guide-desc">A dripping faucet wastes up to 3,000 gallons of water per year and typically costs $150–$300 to fix professionally. Most leaks are caused by a worn washer or O-ring — parts that cost under $5. This guide walks you through diagnosing and fixing the most common faucet types.</p>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="How to Fix a Leaky Faucet"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="video-credit">Video by <a href="#" target="_blank" rel="noopener">The Plumbing Pro</a> · 214K subscribers · <a href="#" target="_blank" rel="noopener">Watch more on YouTube →</a></p>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('steps', this)">Steps</div>
+      <div class="tab" onclick="switchTab('tips', this)">Pro tips</div>
+      <div class="tab" onclick="switchTab('faq', this)">FAQ</div>
+    </div>
+
+    <!-- STEPS TAB -->
+    <div id="tab-steps">
+      <div class="steps-list">
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Turn off the water supply</div>
+            <div class="step-text">Find the shut-off valve under the sink — turn it clockwise until it stops. If there's no valve under the sink, turn off the main water supply. Open the faucet to release any remaining pressure and drain the lines.</div>
+            <div class="step-warning"><strong>⚠️ Safety first:</strong> Never skip this step. Working on a live water line will soak you and your cabinet instantly.</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Identify your faucet type</div>
+            <div class="step-text">The fix varies by faucet type. Check which you have: <strong>Ball faucet</strong> (one handle that rotates), <strong>Cartridge faucet</strong> (one or two handles, pulls up/down), <strong>Ceramic disc faucet</strong> (wide cylindrical body, single lever), or <strong>Compression faucet</strong> (two separate handles, older style). If unsure, search your faucet's brand + model on the manufacturer's site.</div>
+            <div class="step-tip"><strong>💡 Tip:</strong> Take a photo of your faucet before disassembling. It'll help if you need to search for parts or reassemble later.</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Remove the handle</div>
+            <div class="step-text">Look for a decorative cap on top of the handle (often pops off with a flathead screwdriver). Underneath is a screw — remove it with a Phillips head. Gently wiggle the handle off. Some handles need a handle puller tool if they're corroded on.</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Locate and remove the cartridge or stem</div>
+            <div class="step-text">Use an adjustable wrench or pliers (wrap jaws with tape to protect chrome) to unscrew the packing nut. Pull out the stem or cartridge. Note the orientation before removing — take a photo so you know which way it goes back in.</div>
+            <div class="step-tip"><strong>💡 Tip:</strong> Bring the old cartridge to your hardware store. They can match it exactly and save you from buying the wrong replacement.</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Replace the washer, O-ring, or cartridge</div>
+            <div class="step-text">For compression faucets: the rubber washer at the bottom of the stem is almost always the culprit. Remove the screw holding it and swap in the new washer. For cartridge faucets: replace the entire cartridge. For ball faucets: replace the seats, springs, and O-rings (a repair kit has everything). Coat new rubber parts lightly with plumber's grease before installing.</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-check" onclick="toggleStep(this)" title="Mark complete">✓</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Reassemble and test</div>
+            <div class="step-text">Reverse your disassembly steps — seat, packing nut, handle, screw, cap. Don't overtighten; snug is enough. Slowly turn the water supply back on (counterclockwise). Turn the faucet on and off a few times. Check for drips at the spout and leaks around the base of the handle. If it still drips, the seat itself may be damaged — a seat wrench can resurface it.</div>
+            <div class="step-tip"><strong>💡 Tip:</strong> Turn the water on slowly — sudden pressure can cause leaks at connections you didn't touch.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TIPS TAB (hidden) -->
+    <div id="tab-tips" style="display:none;">
+      <div style="padding:8px 0;">
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:8px;">Use a repair kit, not individual parts</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">For ball faucets especially, buy a complete repair kit for your brand ($8–$15). It includes all the parts that wear out together, and it's much cheaper than replacing them individually.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:8px;">Plumber's grease is non-negotiable</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">Silicone-based plumber's grease ($4) extends the life of rubber O-rings and washers dramatically. Apply a thin coat to every rubber part before reassembling.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:8px;">Know when to call a plumber</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">If you see corrosion on the valve seat, cracks in the faucet body, or water leaking from inside the wall — stop and call a pro. These indicate bigger problems that DIY won't fix.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ TAB (hidden) -->
+    <div id="tab-faq" style="display:none;">
+      <div style="padding:8px 0;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px;">What if I can't find my faucet's cartridge at the hardware store?</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">Search the brand + model number online — most manufacturers sell replacement parts directly. Moen, Delta, and Kohler all have excellent parts programs. Moen even has a lifetime warranty on many cartridges and will ship you one free.</p>
+        </div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Can I fix a dripping shower head the same way?</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">The principle is the same, but shower valves are more complex. Check our <a href="#" style="color:var(--green-600);font-weight:600;">Shower Valve Repair guide</a> for a separate walkthrough.</p>
+        </div>
+        <div>
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px;">The leak is under the sink, not the spout. Is this the right guide?</h3>
+          <p style="font-size:.92rem;color:var(--gray-700);line-height:1.7;">No — that's likely a supply line or drain connection issue. See our <a href="#" style="color:var(--green-600);font-weight:600;">Fix an Under-Sink Leak guide</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED GUIDES -->
+    <div class="related">
+      <h2>Related guides</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <div class="related-cat">🚿 Plumbing</div>
+          <div class="related-title">Unclog a Slow Drain</div>
+          <div class="related-meta"><span>⏱ 20 min</span><span>💰 $0–$12</span><span>🟢 Beginner</span></div>
+        </div>
+        <div class="related-card">
+          <div class="related-cat">🚿 Plumbing</div>
+          <div class="related-title">Fix a Running Toilet</div>
+          <div class="related-meta"><span>⏱ 30 min</span><span>💰 $5–$20</span><span>🟢 Beginner</span></div>
+        </div>
+        <div class="related-card">
+          <div class="related-cat">🚿 Plumbing</div>
+          <div class="related-title">Replace a Showerhead</div>
+          <div class="related-meta"><span>⏱ 15 min</span><span>💰 $15–$60</span><span>🟢 Beginner</span></div>
+        </div>
+        <div class="related-card">
+          <div class="related-cat">🚿 Plumbing</div>
+          <div class="related-title">Drain Your Water Heater</div>
+          <div class="related-meta"><span>⏱ 45 min</span><span>💰 $0</span><span>🟡 Intermediate</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- PROGRESS -->
+    <div class="progress-card">
+      <div class="progress-title">Your progress</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 of 6 steps completed</div>
+    </div>
+
+    <!-- SAVINGS -->
+    <div class="savings-card">
+      <div class="savings-label">💰 Your savings breakdown</div>
+      <div class="savings-row"><span class="label">Plumber call-out fee</span><span class="val">$85</span></div>
+      <div class="savings-row"><span class="label">Labor (1 hr)</span><span class="val">$95</span></div>
+      <div class="savings-row"><span class="label">Parts (plumber markup)</span><span class="val">$45</span></div>
+      <hr class="savings-divider"/>
+      <div class="savings-row"><span class="label" style="font-size:.8rem;color:rgba(255,255,255,.6);">Your cost (parts only)</span><span class="val" style="color:rgba(255,255,255,.7);">−$15</span></div>
+      <hr class="savings-divider"/>
+      <div class="savings-total-row">
+        <span class="savings-total-label">You save</span>
+        <span class="savings-total-val">$210</span>
+      </div>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="materials-card">
+      <div class="card-title">
+        Tools & Materials
+        <span class="card-action">📋 Print list</span>
+      </div>
+      <div class="material-item"><span class="material-icon">🔧</span><span class="material-name">Adjustable wrench</span><a class="material-link" href="#" target="_blank">Amazon →</a></div>
+      <div class="material-item"><span class="material-icon">🔩</span><span class="material-name">Phillips screwdriver</span><a class="material-link" href="#" target="_blank">Amazon →</a></div>
+      <div class="material-item"><span class="material-icon">🪛</span><span class="material-name">Flathead screwdriver</span><a class="material-link" href="#" target="_blank">Amazon →</a></div>
+      <div class="material-item"><span class="material-icon">💧</span><span class="material-name">Replacement cartridge / washer kit</span><a class="material-link" href="#" target="_blank">Home Depot →</a></div>
+      <div class="material-item"><span class="material-icon">🧴</span><span class="material-name">Plumber's grease</span><a class="material-link" href="#" target="_blank">Amazon →</a></div>
+      <div class="material-item"><span class="material-icon">🪣</span><span class="material-name">Small bucket or towels</span><span class="material-name" style="color:var(--gray-300);font-size:.78rem;">you have this</span></div>
+    </div>
+
+    <!-- CREATOR -->
+    <div class="creator-card">
+      <div class="card-title">Guide creator</div>
+      <div class="creator-top">
+        <div class="creator-avatar">🔧</div>
+        <div class="creator-info">
+          <h4>The Plumbing Pro</h4>
+          <p>214K subscribers · Licensed master plumber</p>
+        </div>
+      </div>
+      <p class="creator-desc">25 years as a licensed plumber in Texas. Teaches homeowners to handle 90% of common plumbing issues without calling a pro.</p>
+      <a href="#" target="_blank" rel="noopener" class="btn-creator">Watch more on YouTube →</a>
+    </div>
+
+  </aside>
+</div>
+
+<script>
+  let completed = 0;
+  const total = 6;
+
+  function toggleStep(el) {
+    el.classList.toggle('checked');
+    completed = document.querySelectorAll('.step-check.checked').length;
+    const pct = Math.round((completed / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = completed + ' of ' + total + ' steps completed';
+  }
+
+  function switchTab(name, el) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).style.display = 'block';
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
