@@ -222,4 +222,29 @@ export default function DashboardPage() {
                 <Link key={guide.slug} href={`/guides/${guide.slug}`}>
                   <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all p-5 h-full cursor-pointer">
                     <div className="flex items-center justify-between mb-3">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColors[guide.category] ?? 'bg-gray-100 text-gr
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColors[guide.category] ?? 'bg-gray-100 text-gray-600'}`}>
+                        {guide.category}
+                      </span>
+                      {guide.premium && (
+                        <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                          ⭐ Premium
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-bold text-[#1a3a2a] mb-1.5">{guide.title}</h3>
+                    <p className="text-sm text-gray-500 mb-4 line-clamp-2">{guide.description}</p>
+                    <div className="flex items-center gap-3 text-xs text-gray-400">
+                      <span>⏱ {guide.duration}</span>
+                      <span>💰 {guide.cost}</span>
+                      <span>{'★'.repeat(Math.round(guide.rating))} {guide.rating}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}

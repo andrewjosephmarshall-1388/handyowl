@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import UpgradeButton from '@/components/UpgradeButton'
-import ManageSubscriptionButton from '@/components/ManageSubscriptionButton'
+import PremiumPricingCTA from '@/components/PremiumPricingCTA'
 
 export const metadata = {
   title: 'Pricing — Handy Owl',
@@ -62,6 +61,8 @@ export default async function PricingPage() {
   const session = await getServerSession(authOptions)
   const isAuthed = !!session?.user
   const isPremium = session?.user?.plan === 'PREMIUM'
+
+  const mode = isPremium ? 'premium' : isAuthed ? 'authed' : 'anon'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -124,59 +125,42 @@ export default async function PricingPage() {
               <p className="text-white/60 text-sm">Everything you need to own your home</p>
             </div>
 
-            {/* Billing toggle (visual only — real switching happens in the portal) */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex bg-white/10 rounded-lg p-1 gap-1">
-                <span className="px-3 py-1.5 rounded-md bg-white/20 text-white text-xs font-semibold">Monthly</span>
-                <span className="px-3 py-1.5 text-white/50 text-xs font-medium">Annual</span>
-              </div>
-              <span className="text-amber-400 text-xs font-semibold">Save 23% annually</span>
+            {/* Toggle + price + features + CTA are all managed by the client component */}
+            <PremiumPricingCTA mode={mode} features={premiumFeatures} />
+          </div>
+        </div>
+
+        {/* Value prop */}
+        <div className="mt-12 bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+          <p className="text-lg font-bold text-[#1a3a2a] mb-1">💡 The math is simple</p>
+          <p className="text-gray-600 text-sm max-w-lg mx-auto">
+            The average plumber charges <strong>$150–$300</strong> for a simple faucet repair. Handy Owl Premium costs <strong>$7.99/month</strong>. Fix one thing yourself and you've paid for a whole year.
+          </p>
+        </div>
+
+        {/* Trust badges */}
+        <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-500">
+          <span className="flex items-center gap-1.5">🔒 Secured by Stripe</span>
+          <span className="flex items-center gap-1.5">↩️ 30-day refund guarantee</span>
+          <span className="flex items-center gap-1.5">❌ Cancel anytime</span>
+          <span className="flex items-center gap-1.5">📱 Works on all devices</span>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-2xl mx-auto px-4 pb-20">
+        <h2 className="text-2xl font-bold text-[#1a3a2a] text-center mb-8" style={{ fontFamily: 'Fraunces, serif' }}>
+          Common questions
+        </h2>
+        <div className="space-y-4">
+          {faqs.map(faq => (
+            <div key={faq.q} className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+              <h3 className="font-bold text-[#1a3a2a] mb-2">{faq.q}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{faq.a}</p>
             </div>
-
-            <div className="mb-2">
-              <span className="text-4xl font-bold text-white">$7.99</span>
-              <span className="text-white/50 ml-1">/ month</span>
-            </div>
-            <p className="text-sm text-amber-400 mb-6">or $74/year — billed annually</p>
-
-            <ul className="space-y-3 mb-8">
-              {premiumFeatures.map(f => (
-                <li key={f} className="flex items-start gap-3 text-sm text-white/80">
-                  <span className="text-amber-400 mt-0.5">✓</span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            {/* CTA branches by auth state and plan */}
-            {isPremium ? (
-              <>
-                <ManageSubscriptionButton
-                  label="Manage your subscription"
-                  className="w-full block text-center bg-amber-500 hover:bg-amber-400 text-white py-3 rounded-xl font-bold"
-                />
-                <p className="text-center text-xs text-white/40 mt-3">
-                  Switch plans, update payment, or cancel anytime.
-                </p>
-              </>
-            ) : isAuthed ? (
-              <>
-                <UpgradeButton
-                  plan="monthly"
-                  label="Start Premium — $7.99/mo"
-                  className="w-full block text-center bg-amber-500 hover:bg-amber-400 text-white py-3 rounded-xl font-bold"
-                />
-                <div className="mt-3 text-center">
-                  <UpgradeButton
-                    plan="yearly"
-                    label="Or pay $74/year (save 23%)"
-                    className="text-white/50 hover:text-white/80 text-xs underline underline-offset-2 bg-transparent"
-                  />
-                </div>
-                <p className="text-center text-xs text-white/40 mt-3">Cancel anytime. 30-day money-back guarantee.</p>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login?next=/pricing"
-       
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}

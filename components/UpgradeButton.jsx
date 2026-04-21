@@ -23,6 +23,18 @@ export default function UpgradeButton({
         body: JSON.stringify({ plan }),
       })
 
+      // Signed-out users hit a 401 here — send them to login, then back to /pricing
+      if (res.status === 401) {
+        router.push('/login?next=/pricing')
+        return
+      }
+
+      // An already-PREMIUM user gets a 409 — route them to Manage Subscription instead
+      if (res.status === 409) {
+        router.push('/dashboard/settings')
+        return
+      }
+
       const data = await res.json()
 
       if (!res.ok || !data.url) {

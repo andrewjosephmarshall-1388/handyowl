@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 
 export function OwlLogo() {
   return (
@@ -28,6 +29,8 @@ const navLinks = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { data: session, status } = useSession()
+  const isAuthed = status === 'authenticated'
 
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
@@ -57,18 +60,37 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-gray-600 hover:text-[#1a3a2a] transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/login"
-            className="bg-[#1a3a2a] hover:bg-[#2d5a3d] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-          >
-            Get started free
-          </Link>
+          {isAuthed ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium text-gray-600 hover:text-[#1a3a2a] transition-colors"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="text-sm font-medium text-gray-600 hover:text-[#1a3a2a] transition-colors"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-medium text-gray-600 hover:text-[#1a3a2a] transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/login"
+                className="bg-[#1a3a2a] hover:bg-[#2d5a3d] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+              >
+                Get started free
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -99,12 +121,32 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
-            <Link href="/login" className="block text-center border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium">
-              Sign in
-            </Link>
-            <Link href="/login" className="block text-center bg-[#1a3a2a] text-white py-2 rounded-lg text-sm font-semibold">
-              Get started free
-            </Link>
+            {isAuthed ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="block text-center border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => { setMenuOpen(false); signOut({ callbackUrl: '/' }) }}
+                  className="block text-center bg-[#1a3a2a] text-white py-2 rounded-lg text-sm font-semibold"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="block text-center border border-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium">
+                  Sign in
+                </Link>
+                <Link href="/login" className="block text-center bg-[#1a3a2a] text-white py-2 rounded-lg text-sm font-semibold">
+                  Get started free
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

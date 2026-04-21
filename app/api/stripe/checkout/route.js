@@ -53,4 +53,41 @@ export async function POST(request) {
       return NextResponse.json(
         {
           error:
-            'You already have an active subscri
+            'You already have an active subscription. Use "Manage subscription" to switch plans.',
+        },
+        { status: 409 }
+      )
+    }
+
+    const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
+
+    // Reuse the Stripe customer if we've already created one — avoids duplicates
+    // when a user cancels and re-subscribes.
+    const customerFields = user.stripeCustomerId
+      ? { customer: user.stripeCustomerId }
+      : { customer_email: user.email ?? undefined }
+
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${baseUrl}/dashboard/upgrade-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/pricing?canceled=true`,
+      ...customerFields,
+      metadata: {
+        userId: user.id,
+        plan,
+      },
+      subscription_data: {
+        metadata: {
+          userId: user.id,
+        },
+      },
+      allow_promotion_codes: true,
+    })
+
+    return NextResponse.json({ url: checkoutSession.url })
+  } catch (err) {
+    console.error('Stripe checkout error:', err)
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
