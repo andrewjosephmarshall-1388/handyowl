@@ -25,7 +25,7 @@ export default function UpgradeButton({
 
       const data = await res.json()
 
-      if (\!res.ok || \!data.url) {
+      if (!res.ok || !data.url) {
         throw new Error(data.error ?? 'Something went wrong.')
       }
 

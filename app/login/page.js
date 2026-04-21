@@ -138,20 +138,4 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-500 mt-6">
             {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
-              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-              className="text-[#2d5a3d] font-medium hover:underline"
-            >
-              {mode === 'login' ? 'Sign up free' : 'Sign in'}
-            </button>
-          </p>
-        </div>
-
-        <p className="text-center text-xs text-gray-400 mt-4">
-          By continuing, you agree to our{' '}
-          <Link href="/terms" className="hover:underline">Terms</Link> and{' '}
-          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>.
-        </p>
-      </div>
-    </div>
-  )
-}
+        

@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { guides, categories } from '@/lib/guides'
+import ManageSubscriptionButton from '@/components/ManageSubscriptionButton'
 
 const savedGuides = guides.slice(0, 3)
 const inProgressGuide = guides[0]
@@ -28,6 +30,10 @@ const navItems = [
 ]
 
 export default function DashboardPage() {
+  const { data: session } = useSession()
+  const isPremium = session?.user?.plan === 'PREMIUM'
+  const displayName = session?.user?.name || session?.user?.email?.split('@')[0] || 'there'
+  const initial = (displayName[0] || 'A').toUpperCase()
   const [activeCategory, setActiveCategory] = useState('all')
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
@@ -47,7 +53,7 @@ export default function DashboardPage() {
             </Link>
           )}
           <button
-            onClick={() => setSidebarOpen(\!sidebarOpen)}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
             className="text-white/60 hover:text-white p-1 rounded"
           >
             {sidebarOpen ? '←' : '→'}
@@ -71,29 +77,40 @@ export default function DashboardPage() {
           ))}
         </nav>
 
-        {/* Upgrade prompt for free users */}
+        {/* Plan box */}
         {sidebarOpen && (
-          <div className="p-4 m-3 bg-amber-500/20 border border-amber-500/30 rounded-xl">
-            <p className="text-xs text-amber-300 font-semibold mb-1">Free Plan</p>
-            <p className="text-xs text-white/70 mb-3">Unlock all 200+ guides and cost tools</p>
-            <Link
-              href="/pricing"
-              className="block text-center text-xs font-bold bg-amber-500 hover:bg-amber-400 text-white py-2 px-3 rounded-lg transition-colors"
-            >
-              Upgrade — $7.99/mo
-            </Link>
-          </div>
+          isPremium ? (
+            <div className="p-4 m-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+              <p className="text-xs text-emerald-300 font-semibold mb-1">⭐ Premium</p>
+              <p className="text-xs text-white/70 mb-3">Full access to every guide and tool.</p>
+              <ManageSubscriptionButton
+                label="Manage subscription"
+                className="w-full block text-center text-xs font-bold bg-white/10 hover:bg-white/20 text-white py-2 px-3 rounded-lg"
+              />
+            </div>
+          ) : (
+            <div className="p-4 m-3 bg-amber-500/20 border border-amber-500/30 rounded-xl">
+              <p className="text-xs text-amber-300 font-semibold mb-1">Free Plan</p>
+              <p className="text-xs text-white/70 mb-3">Unlock all 200+ guides and cost tools</p>
+              <Link
+                href="/pricing"
+                className="block text-center text-xs font-bold bg-amber-500 hover:bg-amber-400 text-white py-2 px-3 rounded-lg transition-colors"
+              >
+                Upgrade — $7.99/mo
+              </Link>
+            </div>
+          )
         )}
 
         <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-sm font-bold text-white">
-              A
+              {initial}
             </div>
             {sidebarOpen && (
               <div>
-                <p className="text-sm font-medium text-white">Andrew</p>
-                <p className="text-xs text-white/50">Free plan</p>
+                <p className="text-sm font-medium text-white">{displayName}</p>
+                <p className="text-xs text-white/50">{isPremium ? 'Premium plan' : 'Free plan'}</p>
               </div>
             )}
           </div>
@@ -106,7 +123,7 @@ export default function DashboardPage() {
         <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-30">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-[#1a3a2a]">Good morning, Andrew 👋</h1>
+              <h1 className="text-xl font-bold text-[#1a3a2a]">Good morning, {displayName} 👋</h1>
               <p className="text-sm text-gray-500">Here's what's happening with your home projects</p>
             </div>
             <Link
@@ -205,29 +222,4 @@ export default function DashboardPage() {
                 <Link key={guide.slug} href={`/guides/${guide.slug}`}>
                   <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all p-5 h-full cursor-pointer">
                     <div className="flex items-center justify-between mb-3">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColors[guide.category] ?? 'bg-gray-100 text-gray-600'}`}>
-                        {guide.category}
-                      </span>
-                      {guide.premium && (
-                        <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
-                          ⭐ Premium
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-bold text-[#1a3a2a] mb-1.5">{guide.title}</h3>
-                    <p className="text-sm text-gray-500 mb-4 line-clamp-2">{guide.description}</p>
-                    <div className="flex items-center gap-3 text-xs text-gray-400">
-                      <span>⏱ {guide.duration}</span>
-                      <span>💰 {guide.cost}</span>
-                      <span>{'★'.repeat(Math.round(guide.rating))} {guide.rating}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  )
-}
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${categoryColors[guide.category] ?? 'bg-gray-100 text-gr

@@ -30,7 +30,7 @@ export default function SearchBar({ className = '' }) {
 
   useEffect(() => {
     function handleClick(e) {
-      if (ref.current && \!ref.current.contains(e.target)) {
+      if (ref.current && !ref.current.contains(e.target)) {
         setOpen(false)
       }
     }

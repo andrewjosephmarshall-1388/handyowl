@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 
 export default function GuideCard({ guide }) {
@@ -48,6 +50,4 @@ export default function GuideCard({ guide }) {
           </div>
         </div>
       </div>
-    </Link>
-  )
-}
+    

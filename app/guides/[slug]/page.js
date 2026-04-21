@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const guide = getGuideBySlug(params.slug)
-  if (\!guide) return {}
+  if (!guide) return {}
   return {
     title: `${guide.title} — Handy Owl`,
     description: guide.description,
@@ -19,6 +19,6 @@ export async function generateMetadata({ params }) {
 
 export default function GuidePage({ params }) {
   const guide = getGuideBySlug(params.slug)
-  if (\!guide) notFound()
+  if (!guide) notFound()
   return <GuideDetail guide={guide} />
 }

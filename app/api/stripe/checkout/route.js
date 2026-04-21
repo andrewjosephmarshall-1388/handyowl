@@ -34,42 +34,23 @@ export async function POST(request) {
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { id: true, email: true, stripeCustomerId: true },
+      select: {
+        id: true,
+        email: true,
+        stripeCustomerId: true,
+        stripeSubscriptionId: true,
+        subscriptionStatus: true,
+      },
     })
     if (!user) {
       return NextResponse.json({ error: 'Account not found.' }, { status: 401 })
     }
 
-    const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
-
-    // Reuse the Stripe customer if we've already created one — avoids duplicates
-    // when a user cancels and re-subscribes.
-    const customerFields = user.stripeCustomerId
-      ? { customer: user.stripeCustomerId }
-      : { customer_email: user.email ?? undefined }
-
-    const checkoutSession = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${baseUrl}/dashboard/upgrade-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/pricing?canceled=true`,
-      ...customerFields,
-      metadata: {
-        userId: user.id,
-        plan,
-      },
-      subscription_data: {
-        trial_period_days: 0,
-        metadata: {
-          userId: user.id,
-        },
-      },
-      allow_promotion_codes: true,
-    })
-
-    return NextResponse.json({ url: checkoutSession.url })
-  } catch (err) {
-    console.error('Stripe checkout error:', err)
-    return NextResponse.json({ error: err.message }, { status: 500 })
-  }
-}
+    // Prevent double-subscribe. If the user already has an active subscription,
+    // they should switch plans via the billing portal, not create a second one.
+    const ACTIVE_STATUSES = ['active', 'trialing', 'past_due']
+    if (user.stripeSubscriptionId && ACTIVE_STATUSES.includes(user.subscriptionStatus)) {
+      return NextResponse.json(
+        {
+          error:
+            'You already have an active subscri

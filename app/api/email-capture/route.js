@@ -21,7 +21,4 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('Email capture error:', err)
-    return NextResponse.json({ error: 'Server error.' }, { status: 500 })
-  }
-}
+    console.error('Em

@@ -11,7 +11,7 @@ export default function UpgradeSuccessPage() {
           className="text-3xl font-bold text-[#1a3a2a] mb-3"
           style={{ fontFamily: 'Fraunces, serif' }}
         >
-          Welcome to Premium\!
+          Welcome to Premium!
         </h1>
         <p className="text-gray-600 mb-8">
           You now have unlimited access to every guide, cost tool, and expert video on Handy Owl. Time to start saving money.

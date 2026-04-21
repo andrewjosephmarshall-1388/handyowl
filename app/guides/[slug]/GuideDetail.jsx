@@ -62,7 +62,7 @@ export default function GuideDetail({ guide }) {
               {guide.steps.map((step, i) => (
                 <div key={i} style={{ display: 'flex', gap: 20, padding: '24px 0', borderBottom: i < guide.steps.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                    <button onClick={() => setChecked(prev => ({ ...prev, [i]: \!prev[i] }))} style={{ width: 36, height: 36, borderRadius: '50%', border: checked[i] ? 'none' : '2px solid #d1d5db', background: checked[i] ? '#2d6b42' : 'transparent', color: checked[i] ? '#fff' : 'transparent', cursor: 'pointer', fontSize: '.9rem', fontWeight: 700, transition: 'all .15s' }}>✓</button>
+                    <button onClick={() => setChecked(prev => ({ ...prev, [i]: !prev[i] }))} style={{ width: 36, height: 36, borderRadius: '50%', border: checked[i] ? 'none' : '2px solid #d1d5db', background: checked[i] ? '#2d6b42' : 'transparent', color: checked[i] ? '#fff' : 'transparent', cursor: 'pointer', fontSize: '.9rem', fontWeight: 700, transition: 'all .15s' }}>✓</button>
                     {i < guide.steps.length - 1 && <div style={{ width: 2, flex: 1, background: '#f3f4f6', margin: '4px 0' }} />}
                   </div>
                   <div style={{ flex: 1 }}>
