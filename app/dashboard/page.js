@@ -6,9 +6,15 @@ import { useSession } from 'next-auth/react'
 import { guides, categories } from '@/lib/guides'
 import ManageSubscriptionButton from '@/components/ManageSubscriptionButton'
 
-const savedGuides = guides.slice(0, 3)
-const inProgressGuide = guides[0]
+// We don't yet persist per-user guide progress, so the dashboard surfaces
+// catalog-level counts instead of personal stats. The GuideProgress and
+// SavedGuide tables exist in the schema and will plug in here once the
+// guide-detail pages start writing to them.
 const recentGuides = guides.slice(0, 6)
+const freeGuideCount = guides.filter(g => !g.premium).length
+const premiumGuideCount = guides.filter(g => g.premium).length
+const totalCategoryCount = categories.length
+const featuredGuide = guides.find(g => g.slug === 'clean-dryer-vent') ?? guides[0]
 
 const categoryColors = {
   plumbing: 'bg-blue-100 text-blue-700',
@@ -136,13 +142,13 @@ export default function DashboardPage() {
         </header>
 
         <div className="p-6 space-y-8">
-          {/* Stats row */}
+          {/* Stats row — catalog-level counts until per-user progress is wired in */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Total Savings', value: '$847', icon: '💰', color: 'text-green-600' },
-              { label: 'Projects Done', value: '6', icon: '✅', color: 'text-blue-600' },
-              { label: 'Guides Saved', value: '12', icon: '🔖', color: 'text-purple-600' },
-              { label: 'New Guides', value: '8', icon: '🆕', color: 'text-amber-600' },
+              { label: 'Guides Available', value: guides.length, icon: '📚', color: 'text-[#1a3a2a]' },
+              { label: 'Free Guides', value: freeGuideCount, icon: '🆓', color: 'text-blue-600' },
+              { label: 'Premium Guides', value: premiumGuideCount, icon: '⭐', color: 'text-amber-600' },
+              { label: 'Categories', value: totalCategoryCount, icon: '📦', color: 'text-purple-600' },
             ].map(stat => (
               <div key={stat.label} className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
                 <p className="text-2xl mb-1">{stat.icon}</p>
@@ -152,30 +158,26 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Continue where you left off */}
+          {/* Featured guide of the week */}
           <div>
-            <h2 className="text-lg font-bold text-[#1a3a2a] mb-3">Continue where you left off</h2>
+            <h2 className="text-lg font-bold text-[#1a3a2a] mb-3">Featured this week</h2>
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col md:flex-row gap-5 items-start">
               <div className="flex-1">
-                <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full uppercase tracking-wide">
-                  {inProgressGuide.category}
+                <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full uppercase tracking-wide">
+                  Editor&apos;s pick · {featuredGuide.category}
                 </span>
-                <h3 className="text-lg font-bold text-[#1a3a2a] mt-2 mb-1">{inProgressGuide.title}</h3>
-                <p className="text-sm text-gray-500 mb-4">{inProgressGuide.description}</p>
+                <h3 className="text-lg font-bold text-[#1a3a2a] mt-2 mb-1">{featuredGuide.title}</h3>
+                <p className="text-sm text-gray-500 mb-4">{featuredGuide.description}</p>
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                  <span>⏱ {inProgressGuide.duration}</span>
-                  <span>💰 {inProgressGuide.cost}</span>
-                  <span>Step 2 of {inProgressGuide.steps?.length ?? 5}</span>
-                </div>
-                {/* Progress bar */}
-                <div className="w-full bg-gray-100 rounded-full h-2 mb-4">
-                  <div className="bg-[#2d5a3d] h-2 rounded-full" style={{ width: '40%' }}></div>
+                  <span>⏱ {featuredGuide.duration}</span>
+                  <span>💰 {featuredGuide.cost}</span>
+                  <span>{featuredGuide.difficulty}</span>
                 </div>
                 <Link
-                  href={`/guides/${inProgressGuide.slug}`}
+                  href={`/guides/${featuredGuide.slug}`}
                   className="inline-block bg-[#1a3a2a] hover:bg-[#2d5a3d] text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors"
                 >
-                  Continue Guide →
+                  Start this guide →
                 </Link>
               </div>
             </div>
