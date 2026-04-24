@@ -22,6 +22,11 @@ model User {
   stripeSubscriptionId String?        @unique
   subscriptionStatus   String?        // active | past_due | canceled
   subscriptionEndsAt   DateTime?
+  // Creator attribution: slug of the creator whose referral link brought this
+  // user in (set once at signup from the handy_owl_ref cookie).
+  // Null means organic/unattributed. Used for the 30%/12mo rev-share.
+  referredBy           String?
+  referredAt           DateTime?
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
 
@@ -29,6 +34,8 @@ model User {
   sessions   Session[]
   progress   GuideProgress[]
   saved      SavedGuide[]
+
+  @@index([referredBy])
 }
 
 model Account {
@@ -68,18 +75,22 @@ model VerificationToken {
 }
 
 model GuideProgress {
-  id            String   @id @default(cuid())
-  userId        String
-  guideSlug     String
-  stepsComplete Int      @default(0)
-  totalSteps    Int
-  completed     Boolean  @default(false)
-  startedAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                String   @id @default(cuid())
+  userId            String
+  guideSlug         String
+  stepsComplete     Int      @default(0)
+  totalSteps        Int
+  completed         Boolean  @default(false)
+  // CSV of completed step indices, e.g. "0,2,3". Simple encoding; no join
+  // table needed. Migrate to JSON column if per-step metadata is ever needed.
+  completedStepsCsv String?  @default("")
+  startedAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, guideSlug])
+  @@index([userId, updatedAt])
 }
 
 model SavedGuide {

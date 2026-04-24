@@ -2,8 +2,11 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@auth/prisma-adapter'
+import { cookies } from 'next/headers'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+
+const REF_COOKIE = 'handy_owl_ref'
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -69,6 +72,35 @@ export const authOptions = {
         }
       }
       return token
+    },
+  },
+
+  events: {
+    // Fires when the Prisma adapter creates a new user — which for us only
+    // happens on the Google OAuth signup path (credentials signups go through
+    // /api/auth/signup directly and handle referral attribution there).
+    // Read the handy_owl_ref cookie and persist it onto the new User row.
+    async createUser({ user }) {
+      try {
+        const cookieStore = cookies()
+        const ref = cookieStore.get(REF_COOKIE)?.value
+        if (!ref) return
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            referredBy: ref,
+            referredAt: new Date(),
+          },
+        })
+        // NOTE: we can't clear the cookie from this event handler (no response
+        // object available here). The cookie just expires on its own 30-day
+        // TTL. Safe because attribution only fires once per user (the createUser
+        // event runs exactly once per user lifetime).
+      } catch (err) {
+        // Never let attribution bookkeeping break a signup.
+        console.error('Referral attribution failed for user', user.id, err)
+      }
     },
   },
 

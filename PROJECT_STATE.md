@@ -2,7 +2,7 @@
 
 **Living document.** Purpose: bring a future Claude session (or any collaborator) up to speed on Handy Owl in 15 minutes. Update at the end of meaningful work sessions.
 
-Last updated: **2026-04-22**
+Last updated: **2026-04-23**
 
 ---
 
@@ -70,6 +70,12 @@ A freemium DIY home-maintenance education site. Homeowners read structured step-
 - Paid subscription: Pricing page → Upgrade → Stripe Checkout → test card `4242 4242 4242 4242` → redirect to success page → webhook fires → User.plan flips to PREMIUM in DB
 - Plan switching: Dashboard → Manage Subscription → Stripe Billing Portal → Update Plan (monthly ↔ yearly) → webhook fires → DB updates
 - Cancellation: via Stripe Dashboard admin action (immediate) → webhook fires → User.plan flips to FREE, subscriptionStatus to "canceled"
+
+### Built but awaiting Andrew's test (as of overnight 3)
+
+- **Creator referral attribution.** `?ref=<creator-slug>` URL parameter is captured into a cookie by `middleware.js` and persisted into `User.referredBy` at signup (both email/password and Google OAuth paths). Schema migration `20260422020000_add_referral_tracking` ready to run.
+- **Per-user guide progress persistence.** Guide detail page saves completed steps to `GuideProgress.completedStepsCsv` on a 500ms debounce, loads them back on next visit. API: `/api/guides/progress`.
+- **Guide card and guide detail page rendering.** Previously referenced field names that didn't exist on the guide data (rendering broken in production). Rewritten to use real field names; video section hidden when no real URL present.
 
 ### Guide content
 
@@ -196,14 +202,15 @@ Nothing in this file should contain actual secrets. Just pointers to where they 
 
 ## Open threads (in rough priority order)
 
-1. **Point `handyowl.net` at Vercel.** DNS config + Vercel custom domain. When done: update `NEXTAUTH_URL` in Vercel, update Stripe webhook endpoint URL in Stripe Dashboard, update Google OAuth Authorized redirect URIs, update Stripe Customer Portal config if needed. `NEXT_PUBLIC_SITE_URL` env var can also be set so robots.txt/sitemap.xml reflect the new domain.
-2. **Switch Stripe from test mode to live mode.** Create live products + prices, set up a live webhook endpoint, swap 5 Stripe env vars in Vercel (secret key, publishable key, price IDs for monthly+yearly, webhook secret). Stripe Customer Portal needs to be configured in live mode too (same setup as test mode was).
-3. **Publish Google OAuth consent screen.** Moves OAuth out of test mode so any Gmail user can sign in (not just whitelisted test users). Requires verifying domain ownership in Google Search Console.
-4. **Creator referral tracking.** ~3-4 hours of work. Add `User.referredBy` column, middleware to capture `?ref=` query param into cookie, signup flow tweak to persist it. Per `docs/creator-partnership.md`, this needs to be live before $1K MRR.
-5. **Per-user guide progress tracking.** Wire the GuideProgress and SavedGuide tables to the guide detail pages. "Continue where you left off" on the dashboard can show real progress instead of the current "Featured this week" fallback.
+1. **Run the referral-tracking migration in production.** `npx prisma migrate deploy` from Andrew's Windows terminal once overnight-3 is pushed. Without this, signups will fail because the code references columns that don't exist yet in the DB.
+2. **Point `handyowl.net` at Vercel.** DNS config + Vercel custom domain. When done: update `NEXTAUTH_URL` in Vercel, update Stripe webhook endpoint URL in Stripe Dashboard, update Google OAuth Authorized redirect URIs, update Stripe Customer Portal config if needed. `NEXT_PUBLIC_SITE_URL` env var can also be set so robots.txt/sitemap.xml reflect the new domain.
+3. **Switch Stripe from test mode to live mode.** Create live products + prices, set up a live webhook endpoint, swap 5 Stripe env vars in Vercel (secret key, publishable key, price IDs for monthly+yearly, webhook secret). Stripe Customer Portal needs to be configured in live mode too (same setup as test mode was).
+4. **Publish Google OAuth consent screen.** Moves OAuth out of test mode so any Gmail user can sign in (not just whitelisted test users). Requires verifying domain ownership in Google Search Console.
+5. **Wire dashboard "Continue where you left off" to real progress data.** Small follow-up (~30 min) now that `GuideProgress` is getting populated. Query the user's most-recently-updated in-progress guide; render it on the dashboard. Fall back to the current "Featured this week" card when the user has no progress yet.
 6. **Customer validation.** Talk to 5-10 real homeowners (HVAC-adjacent or general) about whether they'd pay $7.99/mo for this. Pre-validates the business before sinking more dev time. Andrew should drive this; Claude can help draft interview scripts.
-7. **Onboard real creators.** Use the outreach templates in `docs/creator-partnership.md`. Goal: 3-5 founding creators in first month.
-8. **Next.js 15 upgrade.** Larger project. Lots of breaking changes. Not urgent.
+7. **Onboard real creators.** Use the outreach templates in `docs/creator-partnership.md`. Goal: 3-5 founding creators in first month. When real YouTube URLs replace the placeholder `creator.youtube: 'https://youtube.com'` values, the video embeds on guide detail pages will automatically appear.
+8. **Creator earnings dashboard.** Once real referrals + real revenue exist, build a simple admin or creator-facing view that groups subscription revenue by `User.referredBy` and shows 30% cut per creator.
+9. **Next.js 15 upgrade.** Larger project. Lots of breaking changes. Not urgent.
 
 ---
 
@@ -236,22 +243,26 @@ Commit this file with the work it documents, not separately. Keeps the history c
 
 ## Current session context (update when ending a session)
 
-**Last session ended:** 2026-04-22, around the time of this file being created.
+**Last session ended:** 2026-04-23 (overnight 3).
 
 **What happened this session:**
-- Pushed overnight 2 work (15 new guides, robots/sitemap, honest dashboard, Next.js patch) to production
-- Had strategic discussion about creator outreach, revenue share terms, and attribution
-- Created `docs/creator-partnership.md` as canonical creator strategy reference (committed but not pushed at session end)
-- Created this file (`PROJECT_STATE.md`)
+- Built creator referral attribution end-to-end: middleware, cookie, signup persistence for both email/password and Google OAuth paths. Schema migration ready to apply.
+- Built per-user guide progress tracking: API route + debounced client-side save + restore on mount.
+- Fixed latent rendering bugs in `GuideCard.jsx` and `GuideDetail.jsx` where the code referenced field names that didn't exist on the guide data. Removed duplicate Navbar/Footer from GuideDetail (root layout already provides them).
+- Wrote `OVERNIGHT3.md` with the full rundown and the morning-checklist (run migration, commit, push, verify).
 
 **What's waiting at session start for next time:**
-- Uncommitted: `PROJECT_STATE.md` (this file)
-- Committed locally but not pushed: `b369d5a Add creator partnership reference doc`
-- Both need `git push` from Andrew's Windows terminal
+- Uncommitted work from overnight 3. Needs `git add -A && git commit && git push` from Andrew's Windows terminal.
+- Needs `npx prisma migrate deploy` after the push to apply the schema changes in Supabase.
+- See `OVERNIGHT3.md` for the step-by-step.
+
+**Sandbox-side caveat:** the Linux mount's view of `lib/guides.js` is stuck at an older 325-line version while the Windows file has the full 1158 lines. This is a known sync quirk; the Windows file is correct. Do NOT commit from the sandbox until this sync issue is resolved.
 
 **Next reasonable moves (Andrew's call):**
+- Apply the migration and commit/push the overnight-3 work
+- Verify referral tracking on production (incognito window, `?ref=test-creator`, sign up, check Supabase)
 - Customer validation / talk to real homeowners (highest-leverage non-coding work)
 - Outreach to creators using the templates in `docs/creator-partnership.md`
 - Point `handyowl.net` at Vercel
 - Switch Stripe to live mode
-- Build the referral tracking (3-4 hours of code)
+- Wire the dashboard "Continue where you left off" to `GuideProgress` queries (30 min follow-up)
