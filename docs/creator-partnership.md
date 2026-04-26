@@ -133,7 +133,7 @@ about it, e.g., "the way you explain LINE vs LOAD at 4:32; most electrical
 tutorials skip that entirely"]. That's the kind of explanation my audience
 needs.
 
-I'm building Handy Owl (https://handyowl.vercel.app), a DIY home
+I'm building Handy Owl (https://handyowl.net), a DIY home
 maintenance site that pairs structured step-by-step guides with expert
 creator videos. It's pre-launch — 42 guides live, no paying users yet,
 under active build.
@@ -159,7 +159,7 @@ building? Happy to work around your schedule.
 Thanks,
 [Andrew]
 [email] / [phone]
-https://handyowl.vercel.app
+https://handyowl.net
 ```
 
 ### Follow-up email (day 7)
@@ -175,7 +175,7 @@ If you're not interested, totally understandable; no need to reply.
 If you are, even a one-line "tell me more" is all I need to set up the
 call.
 
-Site is at https://handyowl.vercel.app — worth a 2-minute click through
+Site is at https://handyowl.net — worth a 2-minute click through
 before you decide.
 
 Thanks,
@@ -187,7 +187,7 @@ Thanks,
 ```
 Hey — your [specific video] helped me understand [specific thing].
 
-I'm building Handy Owl (https://handyowl.vercel.app), a DIY home
+I'm building Handy Owl (https://handyowl.net), a DIY home
 maintenance site that embeds expert creator videos inside structured
 step-by-step guides. Pre-launch, looking for founding creators.
 
@@ -215,7 +215,7 @@ Ask, don't pitch. Goal: understand their priorities so you can frame the partner
 
 ### Pitch (5 min)
 
-Walk through https://handyowl.vercel.app live. Show a guide that features their video (even if you haven't asked yet — have one ready to show). Frame what you're offering in terms of what they just said in discovery.
+Walk through https://handyowl.net live. Show a guide that features their video (even if you haven't asked yet — have one ready to show). Frame what you're offering in terms of what they just said in discovery.
 
 Key points:
 - Attribution, attribution, attribution — show exactly how their credit appears

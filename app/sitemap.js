@@ -8,7 +8,7 @@ function getSiteUrl() {
   return (
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.NEXTAUTH_URL ||
-    'https://handyowl.vercel.app'
+    'https://handyowl.net'
   )
 }
 
