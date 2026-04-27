@@ -2,6 +2,14 @@
 
 import { useState } from 'react'
 
+function safeJsonParse(text) {
+  try {
+    return JSON.parse(text)
+  } catch {
+    return {}
+  }
+}
+
 // POSTs to /api/stripe/portal and redirects the user to the Stripe-hosted
 // customer portal. Used on the pricing page and dashboard for existing
 // subscribers so they can switch plans, cancel, or update payment methods
@@ -19,9 +27,13 @@ export default function ManageSubscriptionButton({
     setError('')
     try {
       const res = await fetch('/api/stripe/portal', { method: 'POST' })
-      const data = await res.json()
+      // Defensively parse JSON — some 500s return empty bodies, and calling
+      // .json() on those throws "Unexpected end of JSON input" which is a
+      // confusing thing to show a user.
+      const text = await res.text()
+      const data = text ? safeJsonParse(text) : {}
       if (!res.ok || !data.url) {
-        throw new Error(data.error ?? 'Something went wrong.')
+        throw new Error(data.error ?? `Something went wrong (HTTP ${res.status}).`)
       }
       window.location.href = data.url
     } catch (err) {

@@ -3,6 +3,14 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+function safeJsonParse(text) {
+  try {
+    return JSON.parse(text)
+  } catch {
+    return {}
+  }
+}
+
 export default function UpgradeButton({
   plan = 'monthly',
   label = 'Upgrade to Premium',
@@ -35,10 +43,14 @@ export default function UpgradeButton({
         return
       }
 
-      const data = await res.json()
+      // Defensively parse JSON — some 500s return empty bodies, and calling
+      // .json() on those throws "Unexpected end of JSON input" which is a
+      // confusing thing to show a user.
+      const text = await res.text()
+      const data = text ? safeJsonParse(text) : {}
 
       if (!res.ok || !data.url) {
-        throw new Error(data.error ?? 'Something went wrong.')
+        throw new Error(data.error ?? `Something went wrong (HTTP ${res.status}).`)
       }
 
       // Redirect to Stripe Checkout

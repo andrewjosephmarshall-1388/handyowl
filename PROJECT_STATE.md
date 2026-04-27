@@ -2,7 +2,7 @@
 
 **Living document.** Purpose: bring a future Claude session (or any collaborator) up to speed on Handy Owl in 15 minutes. Update at the end of meaningful work sessions.
 
-Last updated: **2026-04-25** (Google OAuth consent screen published)
+Last updated: **2026-04-26** (ImprovMX Premium live — bidirectional email working at hello@handyowl.net)
 
 ---
 
@@ -245,6 +245,37 @@ Commit this file with the work it documents, not separately. Keeps the history c
 ## Current session context (update when ending a session)
 
 **Last session ended:** 2026-04-25 (Google OAuth published / In production).
+
+**Email setup completed via ImprovMX Premium (2026-04-26 follow-up):**
+- After Workspace signup got stuck in phone-verification + Personal-plan redirect hell, pivoted to ImprovMX Premium ($9/mo).
+- Created SMTP credential for `hello@handyowl.net` in ImprovMX dashboard.
+- Configured Gmail's "Send mail as" feature: smtp.improvmx.com:587 TLS with the SMTP credential, verified via the confirmation email forwarded back through ImprovMX.
+- Set Gmail to "Reply from the same address the message was sent to" so inbound replies preserve the @handyowl.net branding.
+- **Verified end-to-end:** Sent test from `hello@handyowl.net` to a Yahoo address → landed in Yahoo Inbox (not spam). SPF passed on first try, no further DNS work needed.
+- Net result: Andrew can now send AND receive at `hello@handyowl.net`, all through his existing Gmail UI, single inbox. ImprovMX = $9/mo, vs Workspace's $7/mo + signup friction.
+- Lesson for future Claude sessions: if Workspace signup gets blocked on phone rate-limits or Personal-plan funneling, ImprovMX Premium is the pragmatic alternative — same outcome, less friction, comparable cost.
+
+**Stripe portal bug fix + Workspace signup attempt (2026-04-26):**
+- **Bug found:** `/api/stripe/portal` had no try/catch. When Stripe threw (because Andrew's User row had a `stripeCustomerId` from test mode that doesn't exist in live Stripe), Next.js returned an empty 500 body. Client `res.json()` then failed with "Unexpected end of JSON input." Andrew saw this on `/dashboard` after the live-mode Stripe migration.
+- **Fix shipped (uncommitted/awaiting push at session end):**
+  - `app/api/stripe/portal/route.js` now wrapped in try/catch. Special-cases Stripe's `resource_missing` error code with a clearer user-facing message.
+  - `components/UpgradeButton.jsx` and `components/ManageSubscriptionButton.jsx` now use `res.text()` + safe JSON parse so empty 500 bodies surface as "Something went wrong (HTTP 500)" instead of the cryptic JSON error.
+- **DB state cleanup needed:** Andrew's User row in Supabase still has `plan = PREMIUM` + a test-mode `stripeCustomerId`. Until he clears those, the dashboard renders ManageSubscriptionButton (which will fail predictably even with the new error handling). Action item for him: Supabase Table Editor → User → his row → set `plan = FREE`, NULL out `stripeCustomerId`, `stripeSubscriptionId`, `subscriptionStatus`.
+- **Workspace migration attempted, blocked.** Andrew tried to upgrade from ImprovMX free → Google Workspace Business Starter ($7/mo) for a real `hello@handyowl.net` inbox. Hit two roadblocks:
+  1. Phone verification rate limit on his real number (Google rate-limits across all their products).
+  2. TextNow VOIP number also rate-limited.
+  3. Google's signup flow keeps routing him to Workspace **Personal** ($26.40/mo) instead of Business Starter when he signs up as an individual.
+  - Workaround for plan routing: incognito + sign up as a "team of 2-9 employees" (untested, blocked on phone verification).
+  - Decision: punt Workspace to a future session; let Google's rate limit reset (24-48 hours).
+  - Alternative still on the table: ImprovMX Premium ($9/mo) — keeps current inbox setup, adds outbound SMTP, no DNS changes. $2/mo more than Workspace but vastly less friction.
+- **Creator outreach tracker built.** `creator-outreach.xlsx` saved at root of project. Three sheets: Creators (with dropdowns for niche/source/status), Summary (auto-funnel + conversion rates + by-niche counts), Outreach Log. Use this to track YouTube channel prospecting from Channel Crawler / FeedSpot / etc.
+
+**Email forwarding via ImprovMX (2026-04-25, late session):**
+- Discovered `hello@handyowl.net` was never actually wired up — handyowl.net had no MX records, so any mail to that address bounced. Privacy policy and Terms of Service both list this address.
+- Set up ImprovMX (free tier) for catch-all forwarding to `andrew.joseph.marshall@gmail.com`. Aliases configured: `*@handyowl.net`, `andrew@handyowl.net`, `hello@handyowl.net`.
+- DNS records to be added at GoDaddy: 2 MX records (`mx1.improvmx.com` priority 10, `mx2.improvmx.com` priority 20, both at `@`) + TXT SPF (`v=spf1 include:spf.improvmx.com ~all` at `@`).
+- **Status when session ended:** Andrew was mid-add at GoDaddy. Verification (ImprovMX "CHECK AGAIN" + test email) deferred to next morning.
+- Note: handyowl.net already has a DMARC record set to `p=quarantine` (GoDaddy default). This doesn't break ImprovMX inbound forwarding, but if Handy Owl ever needs to *send* outbound mail from `@handyowl.net`, revisit DMARC and add DKIM.
 
 **Google OAuth consent screen publishing (2026-04-25, this session):**
 - Verified handyowl.net domain ownership in Google Search Console (DNS TXT record auto-detected, likely from prior Vercel/GoDaddy verification chain).
