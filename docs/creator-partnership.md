@@ -182,6 +182,76 @@ Thanks,
 [Andrew]
 ```
 
+### Variant: "You're already featured" (post-populate)
+
+Use this when their video is already live on the platform. Strongest pitch — proves investment, gives them something concrete to click, removes hypothetical framing.
+
+```
+Subject: Your [video title] is on Handy Owl — partnership?
+
+Hi [Creator Name],
+
+Featured your video "[exact video title]" on our [Guide Title] guide:
+https://handyowl.net/guides/[slug]
+
+It went live this week with full attribution to your channel + a
+prominent "Watch more on YouTube" link back to you. Every reader is a
+potential new subscriber for your channel.
+
+I'm building Handy Owl as a curated DIY home-maintenance site. Pre-
+launch (42 guides, no paying users yet), and I'm picking 3-5 founding
+creators to partner with formally.
+
+For founding creators:
+- 30% rev-share on subscribers you refer, 12 months, kicks in at $1K MRR
+- Your affiliate links (Amazon/Home Depot) replace mine in the materials
+  list of guides featuring your videos — you keep the commission
+- Dedicated referral URL to share with your audience
+- Founding creator badge + prominent placement at launch
+
+If you'd rather your video NOT be on the site, just reply and it's gone
+the same day — there's a "Request removal" link on every embed too.
+
+Otherwise: open to a 15-min call? Even a one-line "tell me more" is
+enough to set up time.
+
+Thanks,
+[Andrew]
+hello@handyowl.net
+https://handyowl.net
+```
+
+### Variant: Embedding-disabled creator (modified ask)
+
+When a creator's videos can't embed (they have it disabled in YouTube settings), the page shows their attribution + a "Watch on YouTube" button but no playable video. The pitch becomes: "I want your videos here, you'd just need to flip a setting."
+
+```
+Subject: Your video on Handy Owl — quick favor?
+
+Hi [Creator Name],
+
+I featured you as the creator on our [Guide Title] guide on Handy Owl:
+https://handyowl.net/guides/[slug]
+
+I'd love your video "[exact video title]" to play directly on the page,
+but I noticed your channel has video embedding disabled — when I added
+the URL it just shows blank instead of playing. So right now your name
+and channel link are there, but the video isn't.
+
+If you flip "Allow embedding" to ON in YouTube Studio (Settings →
+Channel → Advanced settings, or per-video in the upload defaults),
+your video would appear inline and every visitor watching it counts as
+a YouTube view for you. Happy to walk you through the toggle if helpful.
+
+Either way, would love to chat about a partnership — 30% rev-share on
+subscribers you refer (12mo, kicks in at $1K MRR), affiliate-link
+passthrough, founding creator placement.
+
+Thanks,
+[Andrew]
+hello@handyowl.net
+```
+
 ### Instagram / Twitter DM (short-form variant)
 
 ```
