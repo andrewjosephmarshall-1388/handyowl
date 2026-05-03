@@ -2,7 +2,7 @@
 
 **Living document.** Purpose: bring a future Claude session (or any collaborator) up to speed on Handy Owl in 15 minutes. Update at the end of meaningful work sessions.
 
-Last updated: **2026-04-26** (ImprovMX Premium live — bidirectional email working at hello@handyowl.net)
+Last updated: **2026-05-02** (Live webhook endpoint registered + signing secret in Vercel; duplicate subscriptions cleaned up)
 
 ---
 
@@ -245,6 +245,14 @@ Commit this file with the work it documents, not separately. Keeps the history c
 ## Current session context (update when ending a session)
 
 **Last session ended:** 2026-04-25 (Google OAuth published / In production).
+
+**Stripe live webhook fix + duplicate subscription cleanup (2026-05-02):**
+- **Root-cause discovery:** Live webhook endpoint was never actually registered in Stripe Dashboard, despite earlier session notes claiming it was. Live charges from Apr 27 fired `checkout.session.completed` events with no destination, so the User row never got promoted to PREMIUM. Without that promotion, the checkout route's double-subscribe guard (which keys on `stripeSubscriptionId` + active status in DB) didn't trigger, so Andrew accidentally created a SECOND active subscription on `affirmhomeinspections@gmail.com`. Two charges, two subs, one of which was redundant.
+- **Fix part 1:** Registered new live webhook endpoint `vibrant-voyage` at `https://handyowl.net/api/stripe/webhook` listening to 4 events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Active status confirmed in Stripe.
+- **Fix part 2:** Updated `STRIPE_WEBHOOK_SECRET` in Vercel project-level env vars (Production + Preview scope) with the new live signing secret. Verified no duplicate at Shared scope. Triggered redeploy from Vercel UI — deploy went to Ready status (although the deployment-detail UI got stuck displaying "Building" stale state for ~35 min, the deploy itself completed in ~1 min and was Current/Ready in the deployments list).
+- **Cleanup:** Both duplicate subscriptions on `affirmhomeinspections@gmail.com` got auto-cancelled by Stripe's fraud system between Apr 27 and May 2. One $7.99 charge auto-refunded; Andrew manually refunded the second from the Payments page. Net financial state: $0 owed, $0 charged, 0 active subs.
+- **Verification gap (knowingly):** Couldn't trigger a synthetic webhook test in live mode (Stripe's `stripe trigger` is test-mode only by design, and the dashboard's "Send test event" feature appears to have moved or been removed in 2026 UI). Configuration is correct on paper. Real-world proof will come from the next live `checkout.session.completed` event — either Andrew post-fraud-warmup or a real customer.
+- **If next live charge fails to promote User to PREMIUM:** check Stripe webhook delivery logs first. Most likely failure mode would be 400 (signature mismatch — would mean STRIPE_WEBHOOK_SECRET in Vercel still doesn't match live signing secret, possibly due to Shared/Project scope issue or a stale env var cache).
 
 **Email setup completed via ImprovMX Premium (2026-04-26 follow-up):**
 - After Workspace signup got stuck in phone-verification + Personal-plan redirect hell, pivoted to ImprovMX Premium ($9/mo).
