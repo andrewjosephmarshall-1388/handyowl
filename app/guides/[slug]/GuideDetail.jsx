@@ -41,7 +41,12 @@ export default function GuideDetail({ guide }) {
   const isAuthed = status === 'authenticated'
 
   const category = CATEGORY_LOOKUP[guide.category] ?? { name: guide.category, icon: '🔧' }
-  const videoId = extractYouTubeId(guide.creator?.youtube)
+  // Two-field model: videoUrl is the specific video to embed; channelUrl is
+  // the creator's channel (used for "Watch more" + attribution links). Falls
+  // back to legacy `creator.youtube` for guides that haven't been migrated.
+  const creatorVideoUrl = guide.creator?.videoUrl ?? guide.creator?.youtube
+  const creatorChannelUrl = guide.creator?.channelUrl ?? guide.creator?.youtube
+  const videoId = extractYouTubeId(creatorVideoUrl)
 
   const totalSteps = guide.steps?.length ?? 0
   const savings = Math.max(0, (guide.contractorCost ?? 0) - (guide.diyCost ?? 0))
@@ -209,18 +214,26 @@ export default function GuideDetail({ guide }) {
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
               />
             </div>
-            <p style={{ fontSize: '.78rem', color: '#6b7280', textAlign: 'right', marginBottom: 28 }}>
-              Video by{' '}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 8 }}>
+              <p style={{ fontSize: '.78rem', color: '#6b7280', margin: 0 }}>
+                Video by{' '}
+                <a
+                  href={creatorChannelUrl ?? '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#2d6b42', fontWeight: 600 }}
+                >
+                  {guide.creator?.name ?? 'Creator'}
+                </a>{' '}
+                · {guide.creator?.subscribers ?? '—'} subscribers
+              </p>
               <a
-                href={guide.creator?.youtube ?? '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: '#2d6b42', fontWeight: 600 }}
+                href={`mailto:hello@handyowl.net?subject=${encodeURIComponent('Video removal request — ' + guide.title)}&body=${encodeURIComponent(`Hi Handy Owl,\n\nI'm the creator of the video featured on your "${guide.title}" guide (${creatorVideoUrl ?? ''}). Please remove it from your site.\n\nThanks,`)}`}
+                style={{ fontSize: '.7rem', color: '#9ca3af', textDecoration: 'underline' }}
               >
-                {guide.creator?.name ?? 'Creator'}
-              </a>{' '}
-              · {guide.creator?.subscribers ?? '—'} subscribers
-            </p>
+                Request removal
+              </a>
+            </div>
           </>
         )}
 
@@ -411,9 +424,9 @@ export default function GuideDetail({ guide }) {
                 <div style={{ fontSize: '.8rem', color: '#6b7280' }}>{guide.creator.subscribers} subscribers</div>
               </div>
             </div>
-            {guide.creator.youtube && (
+            {creatorChannelUrl && (
               <a
-                href={guide.creator.youtube}
+                href={creatorChannelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
